@@ -1,0 +1,30 @@
+{
+  "name": "student-management-system",
+  "version": "1.0.0",
+  "description": "Student Management System",
+  "main": "assets/js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "webpack --watch & browser-sync start --server --files '*.html,dist/**.js' ",
+    "build": "webpack"
+  },
+  "author": "Ronit Mukherjee<connect.ronit@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "babel-loader": "^8.0.5",
+    "bootstrap": "^4.3.1",
+    "browser-sync": "^2.26.3",
+    "css-loader": "^2.1.1",
+    "jQuery": "^1.7.4",
+    "jquery": "^3.3.1",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
+    "popper.js": "^1.14.7",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}
