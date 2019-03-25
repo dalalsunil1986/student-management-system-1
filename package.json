@@ -26,5 +26,9 @@
     "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ronit-mukherjee/student-management-system.git"
   }
 }
