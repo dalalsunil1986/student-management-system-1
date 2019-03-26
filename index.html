@@ -7,13 +7,31 @@
     <link rel="stylesheet" href="dist/main.css" />
 </head>
 <body>
-    <div class="container">
+    <main class="container pt-5">
         <div class="row">
             <div class="col-12">
                 <h1 class="text-center">Student Management System</h1>
             </div>
         </div>
-    </div>
+        <div class="row mt-5" id="login-pannel">
+            <div class="col-4 offset-4">
+                <div class="alert d-none" role="alert"></div>
+                <form id="login-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" aria-describedby="emailHelp"
+                            placeholder="Enter username" autocomplete="off" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-warning" id="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </main>
     <script src="dist/main.bundle.js"></script>
 </body>
 </html>
