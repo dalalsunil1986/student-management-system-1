@@ -13,7 +13,7 @@
                 <h1 class="text-center">Student Management System</h1>
             </div>
         </div>
-        <div class="row mt-5" id="login-pannel">
+        <section class="row mt-5" id="login-pannel">
             <div class="col-4 offset-4">
                 <div class="alert d-none" role="alert"></div>
                 <form id="login-form" autocomplete="off">
@@ -30,7 +30,75 @@
                     <button type="button" class="btn btn-warning" id="logout-btn">Logout</button>
                 </form>
             </div>
-        </div>
+        </section>
+        <section class="row mt-2 d-none" id="students-pannel">
+            <div class="col-4 offset-4 text-center mb-5">
+                <button class="btn btn-warning" id="logout-btn">LOGOUT</button>
+            </div>
+            <div class="col-5" id="students-form-area">
+                <h2 class="text-center form-title">Add Student</h2>
+                <div class="alert d-none" role="alert"></div>
+                <form id="student-form">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Enter Name" required
+                                    autofocus />
+                                <input type="hidden" id="mode" value="add" />
+                                <input type="hidden" id="id" value="" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" class="form-control" id="age" placeholder="Enter Age" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select class="form-control" id="gender">
+                                    <option value="">Choose Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="class">Class</label>
+                                <input type="number" class="form-control" id="class" placeholder="Enter Class"
+                                    required />
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary btn-block">Add Student</button>
+                </form>
+            </div>
+            <div class="col-7" id="students-table-area">
+                <div class="alert d-none" role="alert"></div>
+                <table class="table d-none">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Class</th>
+                            <th scope="col" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <p class="text-center no-students">No Students added yet. Fill the form to add students.</p>
+            </div>
+        </section>
     </main>
     <script src="dist/main.bundle.js"></script>
 </body>

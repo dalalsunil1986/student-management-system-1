@@ -22,6 +22,7 @@ class StudentManagementSystem {
         ];
         let _students = [];
         let _session = {};
+        let _autoIncrementedId = 0;
 
         const _getUser = (username, password) => {
             for (let i = 0; i < _users.length; i++) {
@@ -63,6 +64,15 @@ class StudentManagementSystem {
             return true;
         };
 
+        this.addToStudents = (student) => {
+            _students.push(student);
+        };
+
+        this.setStudents = (students) => {
+            _students = [...students];
+            sessionStorage.setItem('students', JSON.stringify(_students));
+        };
+
         this.getSession = (key) => {
             if (key) {
                 if (_session.hasOwnProperty(key)) {
@@ -73,6 +83,56 @@ class StudentManagementSystem {
             } else {
                 return { ..._session };
             }
+        }
+
+        this.getStudents = () => {
+            const loggedInUser = this.getSession("user");
+
+            if (loggedInUser) {
+                if (loggedInUser.acl.indexOf("list") >= 0) {
+                    return [..._students];
+                }
+            }
+        };
+
+        this.autoIncrementedId = (value)=>{
+            if(value){ //Set the value
+                _autoIncrementedId = value;
+            } else {
+                return _autoIncrementedId;
+            }
+        };
+    }
+
+    registerStudent(name, age, gender, cls) {
+        const students = this.getStudents();
+        let id = this.autoIncrementedId()+1;
+        this.autoIncrementedId(id);
+
+        return {
+            id,
+            name,
+            age,
+            gender,
+            cls
+        }
+    }
+
+    addStudent(data) {
+        const loggedInUser = this.getSession("user");
+
+        if (loggedInUser) {
+            if (loggedInUser.acl.indexOf("add") >= 0) {
+                const { name, age, gender, cls } = data;
+                const student = this.registerStudent(name, age, gender, cls);
+                this.addToStudents(student);
+
+                return { status: true, msg: "Student added successfully" };
+            } else {
+                return { status: false, msg: "You don't have enough permission" };
+            }
+        } else {
+            return { status: false, msg: "Login to continue" };
         }
     }
 }
