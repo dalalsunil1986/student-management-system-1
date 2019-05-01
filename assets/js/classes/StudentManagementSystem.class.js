@@ -95,8 +95,8 @@ class StudentManagementSystem {
             }
         };
 
-        this.autoIncrementedId = (value)=>{
-            if(value){ //Set the value
+        this.autoIncrementedId = (value) => {
+            if (value) { //Set the value
                 _autoIncrementedId = value;
             } else {
                 return _autoIncrementedId;
@@ -106,7 +106,7 @@ class StudentManagementSystem {
 
     registerStudent(name, age, gender, cls) {
         const students = this.getStudents();
-        let id = this.autoIncrementedId()+1;
+        let id = this.autoIncrementedId() + 1;
         this.autoIncrementedId(id);
 
         return {
@@ -128,6 +128,62 @@ class StudentManagementSystem {
                 this.addToStudents(student);
 
                 return { status: true, msg: "Student added successfully" };
+            } else {
+                return { status: false, msg: "You don't have enough permission" };
+            }
+        } else {
+            return { status: false, msg: "Login to continue" };
+        }
+    }
+
+    getStudentById(studentId) {
+        const loggedInUser = this.getSession("user");
+
+        if (loggedInUser) {
+            if (loggedInUser.acl.indexOf("list") >= 0) {
+                if (studentId) {
+                    const students = this.getStudents();
+
+                    for (let i = 0; i < students.length; i++) {
+                        const stud = students[i];
+
+                        if (stud.id === parseInt(studentId)) {
+                            return { status: true, msg: "", data: stud };
+                        }
+                    }
+
+                    return { status: false, msg: "Invalid student id" };
+                } else {
+                    return { status: false, msg: "No student id received to edit" };
+                }
+            } else {
+                return { status: false, msg: "You don't have enough permission" };
+            }
+        } else {
+            return { status: false, msg: "Login to continue" };
+        }
+    }
+
+    editStudent(studentId, data = {}) {
+        const loggedInUser = this.getSession("user");
+
+        if (loggedInUser) {
+            if (loggedInUser.acl.indexOf("edit") >= 0) {
+                const students = this.getStudents();
+
+                for (let i = 0; i < students.length; i++) {
+                    let student = students[i];
+
+                    if (student.id === parseInt(studentId)) {
+                        students[i] = { ...student, ...data };
+
+                        this.setStudents([...students]);
+
+                        return { status: true, msg: "Student updated successfully" };
+                    }
+                }
+
+                return { status: false, msg: "Invalid student id" };
             } else {
                 return { status: false, msg: "You don't have enough permission" };
             }

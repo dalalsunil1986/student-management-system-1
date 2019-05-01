@@ -9,13 +9,14 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 import "../sass/index.scss";
 
-import {sms} from "./classes/StudentManagementSystem.class";
+import { sms } from "./classes/StudentManagementSystem.class";
 
 $(document).ready(() => {
     const $loginPannelRef = $("#login-pannel");
     const $loginFormRef = $("#login-form", $loginPannelRef);
     const $studentsPanelRef = $("#students-pannel");
-    const $studentFormRef = $("#student-form",$studentsPanelRef);
+    const $studentFormRef = $("#student-form", $studentsPanelRef);
+    const $studentsTableAreaRef = $("#students-table-area", $studentsPanelRef);
 
     $loginFormRef.on("submit", e => {
         e.preventDefault();
@@ -23,7 +24,7 @@ $(document).ready(() => {
         // Fetch the values form the input
         const username = $("#username", $loginFormRef).val();
         const password = $("#password", $loginFormRef).val();
-        
+
         // Login the user with given inputs
         const response = sms.login(username, password);
 
@@ -36,8 +37,8 @@ $(document).ready(() => {
         }
     });
 
-    $("#logout-btn",$studentsPanelRef).on("click",()=>{
-        if(sms.logout()){            
+    $("#logout-btn", $studentsPanelRef).on("click", () => {
+        if (sms.logout()) {
             $studentsPanelRef.addClass("d-none");
             $loginPannelRef.removeClass("d-none");
 
@@ -59,7 +60,7 @@ $(document).ready(() => {
 
         $("table tbody", $studentsPanelRef).html(studentsHtml);
     };
-    
+
     $studentFormRef.on("submit", e => {
         e.preventDefault();
 
@@ -67,12 +68,27 @@ $(document).ready(() => {
         const age = $("#age", $studentFormRef).val();
         const gender = $("#gender", $studentFormRef).val();
         const cls = $("#class", $studentFormRef).val();
+        const mode = $("#mode", $studentFormRef).val();
 
         let response;
 
-        response = sms.addStudent({ name, age, gender, cls });
-        
-        console.log(response);
+        if (mode === "add") {
+            response = sms.addStudent({ name, age, gender, cls });
+        } else if (mode === "edit") {
+            const studentId = $("#id", $studentFormRef).val();
+            response = sms.editStudent(studentId, { name, age, gender, cls });
+
+            /*Reset form for Add Student*/
+            //Reset form values
+            $("#id", $studentFormRef).val("");
+            $("#mode", $studentFormRef).val("add");
+
+            //Reset Form title
+            $(".form-title", $studentsPanelRef).text("Add Student");
+
+            //Reset button text
+            $("button", $studentFormRef).text("Add Student");
+        }
 
         if (response) {
             const $alertRef = $("#students-form-area .alert", $studentsPanelRef);
@@ -104,4 +120,32 @@ $(document).ready(() => {
         // Reset the focus on form
         $("#name", $studentFormRef).focus();
     });
+
+    const _handleStudentEditEvent = e => {
+        const $elemRef = $(e.currentTarget);
+
+        //Retrieve the student id
+        const sId = $elemRef.data("sid");
+
+        // Fetch the student data from the DB
+        let studentData = sms.getStudentById(sId);
+        studentData = studentData.data;
+        console.log(studentData);
+
+        // Populate the data in the from
+        //Set form values
+        $("#name", $studentFormRef).val(studentData.name);
+        $("#age", $studentFormRef).val(studentData.age);
+        $("#gender", $studentFormRef).val(studentData.gender);
+        $("#class", $studentFormRef).val(studentData.cls);
+        $("#id", $studentFormRef).val(studentData.id);
+        $("#mode", $studentFormRef).val("edit");
+
+
+        //Set Form title
+        $(".form-title", $studentsPanelRef).text("Edit Student");
+
+        $("button", $studentFormRef).text("Update");
+    };
+    $studentsTableAreaRef.on('click', ".edit-btn", _handleStudentEditEvent);
 });
