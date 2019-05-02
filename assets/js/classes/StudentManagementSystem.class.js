@@ -179,11 +179,47 @@ class StudentManagementSystem {
 
                         this.setStudents([...students]);
 
+                        console.log(this.getStudents());
                         return { status: true, msg: "Student updated successfully" };
                     }
                 }
 
                 return { status: false, msg: "Invalid student id" };
+            } else {
+                return { status: false, msg: "You don't have enough permission" };
+            }
+        } else {
+            return { status: false, msg: "Login to continue" };
+        }
+    }
+
+    deleteStudent(studentId) {
+        const loggedInUser = this.getSession("user");
+
+        if (loggedInUser) {
+            if (loggedInUser.acl.indexOf("delete") >= 0) {
+                if (studentId) {
+                    let students = this.getStudents();
+
+                    if (studentId - 1 <= students.length) {
+                        for (let i = 0; i < students.length; i++) {
+                            const stud = students[i];
+
+                            if (stud.id === studentId) {
+                                students.splice(i, 1);
+                                this.setStudents(students);
+                                break;
+                            }
+                        }
+
+
+                        return { status: true, msg: "Student deleted successfully", data: students };
+                    } else {
+                        return { status: false, msg: "Student with given id doesn't exist" };
+                    }
+                } else {
+                    return { status: false, msg: "No student id received to edit" };
+                }
             } else {
                 return { status: false, msg: "You don't have enough permission" };
             }

@@ -121,6 +121,7 @@ $(document).ready(() => {
         $("#name", $studentFormRef).focus();
     });
 
+
     const _handleStudentEditEvent = e => {
         const $elemRef = $(e.currentTarget);
 
@@ -148,4 +149,49 @@ $(document).ready(() => {
         $("button", $studentFormRef).text("Update");
     };
     $studentsTableAreaRef.on('click', ".edit-btn", _handleStudentEditEvent);
+
+    const _handleStudentDelete = e => {
+        const studentId = $(e.currentTarget).data("sid");
+
+        // Bind delete functionality on delete button of modal
+        $('#delete-confirmation-modal').on('shown.bs.modal', function (e) {
+            const $modalRef = $(this);
+
+            $(".delete-stud-btn", $modalRef).off("click").on("click", () => {
+                console.log(studentId);
+                const response = sms.deleteStudent(studentId);
+
+
+
+                if (response.status) {
+                    $("#students-table-area .alert", $studentsPanelRef).text(response.msg).addClass("alert-success").removeClass("d-none");
+
+                    setTimeout(() => {
+                        $("#students-table-area .alert", $studentsPanelRef).text("").addClass("d-none").removeClass("alert-success alert-danger");
+                    }, 3000);
+
+                    $('#delete-confirmation-modal').modal('hide');
+                    _repaintStudents();
+
+                    if (response.data.length === 0) {
+                        // Show the table
+                        $("table", $studentsPanelRef).addClass("d-none");
+
+                        // Hide no result msg
+                        $(".no-students", $studentsPanelRef).removeClass("d-none");
+                    }
+                } else {
+                    $("#students-table-area .alert", $studentsPanelRef).text(response.msg).addClass("alert-danger").removeClass("d-none");
+
+                    setTimeout(() => {
+                        $("#students-table-area .alert", $studentsPanelRef).text("").addClass("d-none").removeClass("alert-success alert-danger");
+                    }, 3000);
+
+                    $('#delete-confirmation-modal').modal('hide');
+                }
+            });
+        });
+    };
+
+    $studentsPanelRef.on("click", ".delete-btn", _handleStudentDelete);
 });
