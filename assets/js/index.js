@@ -32,6 +32,21 @@ $(document).ready(() => {
             $(".alert", $loginPannelRef).text("Loggedin Successfully").addClass("alert-success").removeClass("alert-danger d-none");
             $loginPannelRef.addClass("d-none");
             $studentsPanelRef.removeClass("d-none");
+
+            // Check already have previously saved users or not
+            let students = localStorage.getItem("students");
+            if (students) {
+                students = JSON.parse(students);
+                _repaintStudents();
+
+                if (students.length > 0) {
+                    // Show the table
+                    $("table", $studentsPanelRef).removeClass("d-none");
+
+                    // Hide no result msg
+                    $(".no-students", $studentsPanelRef).addClass("d-none");
+                }
+            }
         } else {
             $(".alert", $loginPannelRef).text(response).addClass("alert-danger").removeClass("alert-success d-none");
         }
@@ -51,10 +66,12 @@ $(document).ready(() => {
         const students = sms.getStudents();
 
         let studentsHtml = '';
-        for (let i = 0; i < students.length; i++) {
-            const student = students[i];
+        if (students) {
+            for (let i = 0; i < students.length; i++) {
+                const student = students[i];
 
-            studentsHtml += `<tr><td>${student.id}</td><td>${student.name}</td><td>${student.age}</td><td>${student.gender}</td><td>${student.cls}</td><td class="d-flex justify-content-around"><button class="btn btn-primary edit-btn" data-sid="${student.id}">Edit</button><button class="btn btn-danger delete-btn" data-sid="${student.id}" data-toggle="modal" data-target="#delete-confirmation-modal">Delete</button></td></tr>`;
+                studentsHtml += `<tr><td>${student.id}</td><td>${student.name}</td><td>${student.age}</td><td>${student.gender}</td><td>${student.cls}</td><td class="d-flex justify-content-around"><button class="btn btn-primary edit-btn" data-sid="${student.id}">Edit</button><button class="btn btn-danger delete-btn" data-sid="${student.id}" data-toggle="modal" data-target="#delete-confirmation-modal">Delete</button></td></tr>`;
+            }
         }
 
 
@@ -194,4 +211,36 @@ $(document).ready(() => {
     };
 
     $studentsPanelRef.on("click", ".delete-btn", _handleStudentDelete);
+
+
+
+
+
+    //Check already loggedin or not
+    if (sessionStorage.getItem("session")) {
+        $loginPannelRef.addClass("d-none");
+        $studentsPanelRef.removeClass("d-none");
+        $(".alert", $loginPannelRef).text("").addClass("d-none");
+
+        // Check already have previously saved users or not
+        let students = localStorage.getItem("students");
+        if (students) {
+            students = JSON.parse(students);
+            _repaintStudents();
+
+            if (students.length > 0) {
+                // Show the table
+                $("table", $studentsPanelRef).removeClass("d-none");
+
+                // Hide no result msg
+                $(".no-students", $studentsPanelRef).addClass("d-none");
+            }
+        }
+    } else {
+        $loginPannelRef.removeClass("d-none");
+        $studentsPanelRef.addClass("d-none");
+        $(".alert", $loginPannelRef).text("").addClass("d-none");
+    }
+
+
 });

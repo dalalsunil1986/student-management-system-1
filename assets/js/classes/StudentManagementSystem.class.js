@@ -20,8 +20,11 @@ class StudentManagementSystem {
                 acl: ["list", "add"]
             }
         ];
-        let _students = [];
-        let _session = {};
+
+
+        let _students = JSON.parse(localStorage.getItem('students')) || [];
+        let _session = JSON.parse(sessionStorage.getItem('session')) || {};
+
         let _autoIncrementedId = 0;
 
         const _getUser = (username, password) => {
@@ -38,6 +41,7 @@ class StudentManagementSystem {
 
         const _setSession = (key, value) => {
             _session[key] = value;
+            sessionStorage.setItem('session', JSON.stringify(_session));
         };
 
         this.login = (username, password) => {
@@ -61,16 +65,22 @@ class StudentManagementSystem {
 
         this.logout = () => {
             _setSession("user", undefined);
+
+            sessionStorage.removeItem("session")
+
             return true;
         };
 
         this.addToStudents = (student) => {
             _students.push(student);
+
+            localStorage.setItem('students', JSON.stringify(_students));
         };
 
         this.setStudents = (students) => {
             _students = [...students];
-            sessionStorage.setItem('students', JSON.stringify(_students));
+
+            localStorage.setItem('students', JSON.stringify(_students));
         };
 
         this.getSession = (key) => {
@@ -87,12 +97,14 @@ class StudentManagementSystem {
 
         this.getStudents = () => {
             const loggedInUser = this.getSession("user");
-
+            console.log(loggedInUser);
             if (loggedInUser) {
                 if (loggedInUser.acl.indexOf("list") >= 0) {
                     return [..._students];
                 }
             }
+
+            return [];
         };
 
         this.autoIncrementedId = (value) => {
